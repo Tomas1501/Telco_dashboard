@@ -1,0 +1,24 @@
+[theme]
+base="dark"
+primaryColor="#1DB954"
+backgroundColor="#0E1117"
+secondaryBackgroundColor="#262730"
+textColor="#FAFAFA"
+
+[server]
+enableStaticServing = false
+headless = true
+runOnSave = true
+showSidebarNavigation = true
+
+[client]
+showErrorDetails = false
+toolbarMode = "minimal"
+showSidebarNavigation = false
+
+[global]
+# Usuń lub zakomentuj poniższe, jeśli wcześniej były ustawione
+# githubUser = ""
+# githubRepo = ""
+# showGithubStars = false
+# showShareButton = false
