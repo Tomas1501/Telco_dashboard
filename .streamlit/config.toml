@@ -5,20 +5,9 @@ backgroundColor="#0E1117"
 secondaryBackgroundColor="#262730"
 textColor="#FAFAFA"
 
-[server]
-enableStaticServing = false
-headless = true
-runOnSave = true
-showSidebarNavigation = true
-
 [client]
-showErrorDetails = false
-toolbarMode = "minimal"
-showSidebarNavigation = false
+toolbarMode = "none"
 
-[global]
-# Usuń lub zakomentuj poniższe, jeśli wcześniej były ustawione
-# githubUser = ""
-# githubRepo = ""
-# showGithubStars = false
-# showShareButton = false
+# Usuń tę sekcję lub ustaw na true, by przywrócić menu boczne
+[server]
+showSidebarNavigation = true
