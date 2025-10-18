@@ -337,7 +337,7 @@ if nmt_file:
         c1, c2, c3 = st.columns(3)
         with c1:
             freq_ghz = st.number_input("Częstotliwość [GHz]", min_value=0.1, max_value=120.0, value=23.0, step=0.1)
-            use_curv = st.checkbox("Korekta krzywizny Ziemi (k = 0.13)", value=True)
+            use_curv = st.checkbox("Korekta krzywizny Ziemi", value=True)
             show_full_f1 = st.checkbox("Pokaż także 100% F1", value=False)
         with c2:
             start_mode = st.radio("Wysokość początku", ["offset", "absolute"], index=0)
