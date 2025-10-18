@@ -46,7 +46,7 @@ st.set_page_config(page_title="Analiza interferencji – rekomendacja kanału", 
 # =========================
 
 
-# Ścieżka do pliku w repo
+
 ROOT_DIR = Path(__file__).resolve().parents[1]
 DEFAULT_DATA_XLSX = ROOT_DIR / "linie_radiowe_stan_na_2025-09-25.xlsx"
 
@@ -78,7 +78,11 @@ def load_links_simple():
     # Konwersje typów
     df["f_ghz"] = pd.to_numeric(df["f_ghz"].astype(str).str.replace(",", "."), errors="coerce")
     df["bw_mhz"] = pd.to_numeric(df["bw_mhz"], errors="coerce")
-    df["chan_num"] = pd.to_numeric(df["chan"], errors="coerce")
+
+    # Kanały: etykieta, liczba, Hi/Lo
+    df["chan_label"] = df["chan"].astype(str).str.strip()
+    df["chan_num"] = pd.to_numeric(df["chan_label"].str.extract(r"(-?\\d+)")[0], errors="coerce")
+    df["chan_is_hi"] = df["chan_label"].str.contains(r"[′']\\s*$")
 
     # Dodaj kolumnę band
     def guess_band(f):
@@ -95,6 +99,7 @@ def load_links_simple():
     df["pol"] = df["pol"].apply(lambda x: "H" if x.startswith("H") else ("V" if x.startswith("V") else x))
 
     return df
+
 
 # Stałe modelu
 DEFAULT_EIRP_DBM = 55.0
