@@ -34,7 +34,7 @@ st.set_page_config(page_title="Analiza interferencji – rekomendacja kanału", 
 # =========================
 # KONFIG – zmień ścieżkę na właściwy XLSX u siebie
 # =========================
-DEFAULT_DATA_XLSX = r"C:\Personal\Developer\Network dashboard\linie_radiowe_stan_na_2025-09-25.xlsx"
+DEFAULT_DATA_XLSX = r"../linie_radiowe_stan_na_2025-09-25.xlsx"
 
 # Stałe modelu
 DEFAULT_EIRP_DBM = 55.0

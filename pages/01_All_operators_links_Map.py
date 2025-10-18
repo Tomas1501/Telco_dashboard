@@ -31,6 +31,7 @@ operator_colors = {
 default_color = [180, 180, 180]
 
 st.title("Mapa linii radiowych MW")
+
 selected_operators = st.multiselect("Wybierz operatorów", available_operators, default=default_operators)
 
 df_filtered = df[df['Operator'].isin(selected_operators)]
@@ -77,6 +78,7 @@ mid_lat = df_filtered['latitude_A'].mean()
 mid_lon = df_filtered['longitude_A'].mean()
 view_state = pdk.ViewState(latitude=mid_lat, longitude=mid_lon, zoom=6)
 
+st.subheader("Dane: UKE(BIP)/ Wykaz pozwoleń radiowych z dnia 25-09-2025, stan w aplikacji może różnić się od bieżącego rejestru ")
 # Wymuszenie kursora crosshair
 st.markdown("<style>canvas {cursor: crosshair !important;}</style>", unsafe_allow_html=True)
 
