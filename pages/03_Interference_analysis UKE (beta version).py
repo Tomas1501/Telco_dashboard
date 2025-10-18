@@ -43,7 +43,12 @@ st.set_page_config(page_title="Analiza interferencji – rekomendacja kanału", 
 # =========================
 # KONFIG – zmień ścieżkę na właściwy XLSX u siebie
 # =========================
-DEFAULT_DATA_XLSX = r"../linie_radiowe_stan_na_2025-09-25.xlsx"
+from pathlib import Path
+
+# Znajdź katalog główny repo (rodzic folderu pages)
+
+ROOT_DIR = Path(__file__).resolve().parents[1]
+DEFAULT_DATA_XLSX = ROOT_DIR / "linie_radiowe_stan_na_2025-09-25.xlsx"
 
 # Stałe modelu
 DEFAULT_EIRP_DBM = 55.0
@@ -701,8 +706,8 @@ if not os.path.exists(DEFAULT_DATA_XLSX):
     st.error(f"Plik XLSX nie istnieje: {DEFAULT_DATA_XLSX}\nZmień stałą DEFAULT_DATA_XLSX w pliku pages/app.py.")
     st.stop()
 
-mtime = os.path.getmtime(DEFAULT_DATA_XLSX)
-links_df = load_links_cached(DEFAULT_DATA_XLSX, mtime)
+mtime = DEFAULT_DATA_XLSX.stat().st_mtime
+links_df = load_links_cached(str(DEFAULT_DATA_XLSX), mtime)
 
 if links_df is None or links_df.empty:
     links_df, info_dbg, err_dbg = load_links_with_info(DEFAULT_DATA_XLSX)
