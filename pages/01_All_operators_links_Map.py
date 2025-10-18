@@ -3,12 +3,21 @@ import pandas as pd
 import pydeck as pdk
 from pathlib import Path
 
-
+hide_toolbar = """
+    <style>
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    header {visibility: hidden;}
+    </style>
+"""
+st.markdown(hide_toolbar, unsafe_allow_html=True)
 @st.cache_data
+
 def load_data():
-    root=Path(__file__).resolve().parents[1]
-    excel_path = root / "links/xlsx"
+    root = Path(__file__).resolve().parents[1]  # katalog główny repo
+    excel_path = root / "links.xlsx"            # poprawna nazwa pliku
     return pd.read_excel(excel_path, engine="openpyxl")
+
 
 df = load_data()
 df = df.dropna(subset=['longitude_A', 'latitude_A', 'longitude_B', 'latitude_B'])
