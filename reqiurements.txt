@@ -4,4 +4,4 @@ pydeck
 numpy
 plotly.express
 plotly.graph_objects
-openpyxl
+openpyxl>=3.1
