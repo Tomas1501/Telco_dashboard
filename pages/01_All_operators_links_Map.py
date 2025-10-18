@@ -4,7 +4,7 @@ import pydeck as pdk
 
 @st.cache_data
 def load_data():
-    return pd.read_excel(r"C:\Personal\Developer\Network dashboard\links.xlsx", engine="openpyxl")
+    return pd.read_excel("../links.xlsx", engine="openpyxl")
 
 df = load_data()
 df = df.dropna(subset=['longitude_A', 'latitude_A', 'longitude_B', 'latitude_B'])
@@ -84,4 +84,5 @@ st.pydeck_chart(pdk.Deck(
     initial_view_state=view_state,
     layers=[osm_layer, layer],
     tooltip={"text": "{tooltip}"}
+
 ))
