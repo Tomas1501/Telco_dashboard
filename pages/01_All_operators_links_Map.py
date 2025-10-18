@@ -11,6 +11,17 @@ hide_toolbar = """
     </style>
 """
 st.markdown(hide_toolbar, unsafe_allow_html=True)
+
+
+custom_cursor = """
+    <style>
+    .deckgl-map {
+        cursor: crosshair !important;
+    }
+    </style>
+"""
+st.markdown(custom_cursor, unsafe_allow_html=True)
+
 @st.cache_data
 
 def load_data():
@@ -91,9 +102,9 @@ mid_lat = df_filtered['latitude_A'].mean()
 mid_lon = df_filtered['longitude_A'].mean()
 view_state = pdk.ViewState(latitude=mid_lat, longitude=mid_lon, zoom=6)
 
-st.subheader("Dane: UKE(BIP)/ Wykaz pozwoleń radiowych z dnia 25-09-2025, stan w aplikacji może różnić się od bieżącego rejestru ")
+# st.subheader("Dane: UKE(BIP)/ Wykaz pozwoleń radiowych z dnia 25-09-2025, stan w aplikacji może różnić się od bieżącego rejestru ")
 # Wymuszenie kursora crosshair
-st.markdown("<style>canvas {cursor: crosshair !important;}</style>", unsafe_allow_html=True)
+# st.markdown("<style>canvas {cursor: crosshair !important;}</style>", unsafe_allow_html=True)
 
 st.pydeck_chart(pdk.Deck(
     initial_view_state=view_state,
@@ -101,4 +112,11 @@ st.pydeck_chart(pdk.Deck(
     tooltip={"text": "{tooltip}"}
 
 ))
+
+st.markdown(
+    "<p style='font-size:12px; color:gray; text-align:center;'>"
+    "Dane: UKE(BIP)/ Wykaz pozwoleń radiowych z dnia 25-09-2025, stan w aplikacji może różnić się od bieżącego rejestru"
+    "</p>",
+    unsafe_allow_html=True
+)
 
