@@ -1,13 +1,7 @@
 [theme]
 base="dark"
-primaryColor="#1DB954"
-backgroundColor="#0E1117"
-secondaryBackgroundColor="#262730"
-textColor="#FAFAFA"
 
 [client]
-toolbarMode = "none"
+toolbarMode = "minimal"
 
-# Usuń tę sekcję lub ustaw na true, by przywrócić menu boczne
-[server]
-showSidebarNavigation = true
+
