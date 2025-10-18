@@ -86,4 +86,6 @@ st.pydeck_chart(pdk.Deck(
     initial_view_state=view_state,
     layers=[osm_layer, layer],
     tooltip={"text": "{tooltip}"}
+
 ))
+
