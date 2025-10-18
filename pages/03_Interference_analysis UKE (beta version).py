@@ -47,6 +47,7 @@ st.set_page_config(page_title="Analiza interferencji – rekomendacja kanału", 
 
 
 
+
 ROOT_DIR = Path(__file__).resolve().parents[1]
 DEFAULT_DATA_XLSX = ROOT_DIR / "linie_radiowe_stan_na_2025-09-25.xlsx"
 
@@ -98,8 +99,26 @@ def load_links_simple():
     df["pol"] = df["pol"].astype(str).str.upper().str.strip()
     df["pol"] = df["pol"].apply(lambda x: "H" if x.startswith("H") else ("V" if x.startswith("V") else x))
 
-    return df
+    # Konwersja współrzędnych DMS → DD
+    def dms_to_dd(s):
+        try:
+            s = str(s).strip()
+            if not s: return None
+            hemi = "N" if "N" in s else ("E" if "E" in s else ("S" if "S" in s else "W"))
+            parts = s.replace("N","").replace("E","").replace("S","").replace("W","").split("-")
+            deg, minutes, seconds = [float(p.replace(",", ".")) for p in parts]
+            dd = deg + minutes/60 + seconds/3600
+            if hemi in ["S","W"]: dd = -dd
+            return dd
+        except:
+            return None
 
+    df["tx_lon_dd"] = df["tx_lon"].apply(dms_to_dd)
+    df["tx_lat_dd"] = df["tx_lat"].apply(dms_to_dd)
+    df["rx_lon_dd"] = df["rx_lon"].apply(dms_to_dd)
+    df["rx_lat_dd"] = df["rx_lat"].apply(dms_to_dd)
+
+    return df
 
 # Stałe modelu
 DEFAULT_EIRP_DBM = 55.0
