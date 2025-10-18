@@ -1,10 +1,14 @@
 import streamlit as st
 import pandas as pd
 import pydeck as pdk
+from pathlib import Path
+
 
 @st.cache_data
 def load_data():
-    return pd.read_excel(r"../links.xlsx", engine="openpyxl")
+    root=Path(__file__).resolve().parent[1]
+    excel_path = root / "links/xlsx"
+    return pd.read_excel(excel_path, engine="openpyxl")
 
 df = load_data()
 df = df.dropna(subset=['longitude_A', 'latitude_A', 'longitude_B', 'latitude_B'])
