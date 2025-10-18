@@ -3,9 +3,11 @@ import pandas as pd
 import pydeck as pdk
 
 @st.cache_data
-def load_data():
-    return pd.read_excel("../links.xlsx", engine="openpyxl")
-
+def load_data() -> pd.DataFrame:
+    root = Path(__file__).resolve().parents[1]  # katalog główny repo/aplikacji
+    excel_path = root / "links.xlsx"
+    return pd.read_excel(excel_path, engine="openpyxl")
+    
 df = load_data()
 df = df.dropna(subset=['longitude_A', 'latitude_A', 'longitude_B', 'latitude_B'])
 
@@ -86,3 +88,4 @@ st.pydeck_chart(pdk.Deck(
     tooltip={"text": "{tooltip}"}
 
 ))
+
