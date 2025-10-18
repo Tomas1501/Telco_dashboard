@@ -6,7 +6,7 @@ from pathlib import Path
 
 @st.cache_data
 def load_data():
-    root=Path(__file__).resolve().parent[1]
+    root=Path(__file__).resolve().parents[1]
     excel_path = root / "links/xlsx"
     return pd.read_excel(excel_path, engine="openpyxl")
 
