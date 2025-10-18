@@ -28,6 +28,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 import pydeck as pdk
 import streamlit as st
+from pathlib import Path
 
 hide_toolbar = """
     <style>
@@ -43,13 +44,7 @@ st.set_page_config(page_title="Analiza interferencji – rekomendacja kanału", 
 # =========================
 # KONFIG – zmień ścieżkę na właściwy XLSX u siebie
 # =========================
-from pathlib import Path
 
-# Znajdź katalog główny repo (rodzic folderu pages)
-
-from pathlib import Path
-import pandas as pd
-import streamlit as st
 
 # Ścieżka do pliku w repo
 ROOT_DIR = Path(__file__).resolve().parents[1]
@@ -61,11 +56,29 @@ def load_links_simple():
         st.error(f"Plik XLSX nie istnieje: {DEFAULT_DATA_XLSX}")
         return pd.DataFrame()
 
-    # Wczytaj dane z nagłówkiem
     df = pd.read_excel(DEFAULT_DATA_XLSX, engine="openpyxl")
 
-    # Konwersja częstotliwości na float
-    df["f [GHz]"] = pd.to_numeric(df["f [GHz]"].astype(str).str.replace(",", "."), errors="coerce")
+    # Mapowanie kolumn
+    rename_map = {
+        "Dl_geo_Tx": "tx_lon",
+        "Sz_geo_Tx": "tx_lat",
+        "Dl_geo_Rx": "rx_lon",
+        "Sz_geo_Rx": "rx_lat",
+        "f [GHz]": "f_ghz",
+        "Nr_kan": "chan",
+        "Symbol_planu": "plan",
+        "Szer_kan [MHz]": "bw_mhz",
+        "Polaryzacja": "pol",
+        "EIRP [dBm]": "eirp_dbm",
+        "Zysk_ant_Tx [dBi]": "tx_gain_dbi",
+        "Zysk_ant_Rx [dBi]": "rx_gain_dbi"
+    }
+    df = df.rename(columns=rename_map)
+
+    # Konwersje typów
+    df["f_ghz"] = pd.to_numeric(df["f_ghz"].astype(str).str.replace(",", "."), errors="coerce")
+    df["bw_mhz"] = pd.to_numeric(df["bw_mhz"], errors="coerce")
+    df["chan_num"] = pd.to_numeric(df["chan"], errors="coerce")
 
     # Dodaj kolumnę band
     def guess_band(f):
@@ -75,15 +88,14 @@ def load_links_simple():
             if abs(b - f) < 3: return b
         return None
 
-    df["band"] = df["f [GHz]"].apply(guess_band)
+    df["band"] = df["f_ghz"].apply(guess_band)
 
-    # Dodaj kolumny pomocnicze (opcjonalnie)
-    df["Dl_geo_Tx"] = df["Dl_geo_Tx"].astype(str).str.strip()
-    df["Sz_geo_Tx"] = df["Sz_geo_Tx"].astype(str).str.strip()
-    df["Dl_geo_Rx"] = df["Dl_geo_Rx"].astype(str).str.strip()
-    df["Sz_geo_Rx"] = df["Sz_geo_Rx"].astype(str).str.strip()
+    # Polaryzacja do H/V
+    df["pol"] = df["pol"].astype(str).str.upper().str.strip()
+    df["pol"] = df["pol"].apply(lambda x: "H" if x.startswith("H") else ("V" if x.startswith("V") else x))
 
     return df
+
 # Stałe modelu
 DEFAULT_EIRP_DBM = 55.0
 DEFAULT_EIRP_DBM_EBAND = 51.0
