@@ -733,7 +733,7 @@ def make_map(latA, lonA, latB, lonB, top_df: pd.DataFrame, worst_dir_label: str,
 # =========================
 # UI
 # =========================
-st.title("Analiza interferencji & rekomendacja kanału (MW) – międzyplanowa")
+st.title("Analiza interferencji & rekomendacja kanału (MW)")
 
 # Wczytywanie
 if not os.path.exists(DEFAULT_DATA_XLSX):
