@@ -47,9 +47,43 @@ from pathlib import Path
 
 # Znajdź katalog główny repo (rodzic folderu pages)
 
+from pathlib import Path
+import pandas as pd
+import streamlit as st
+
+# Ścieżka do pliku w repo
 ROOT_DIR = Path(__file__).resolve().parents[1]
 DEFAULT_DATA_XLSX = ROOT_DIR / "linie_radiowe_stan_na_2025-09-25.xlsx"
 
+@st.cache_data(show_spinner=False)
+def load_links_simple():
+    if not DEFAULT_DATA_XLSX.exists():
+        st.error(f"Plik XLSX nie istnieje: {DEFAULT_DATA_XLSX}")
+        return pd.DataFrame()
+
+    # Wczytaj dane z nagłówkiem
+    df = pd.read_excel(DEFAULT_DATA_XLSX, engine="openpyxl")
+
+    # Konwersja częstotliwości na float
+    df["f [GHz]"] = pd.to_numeric(df["f [GHz]"].astype(str).str.replace(",", "."), errors="coerce")
+
+    # Dodaj kolumnę band
+    def guess_band(f):
+        if pd.isna(f): return None
+        if 70 <= f <= 86: return 80
+        for b in [7, 13, 18, 23, 32, 38]:
+            if abs(b - f) < 3: return b
+        return None
+
+    df["band"] = df["f [GHz]"].apply(guess_band)
+
+    # Dodaj kolumny pomocnicze (opcjonalnie)
+    df["Dl_geo_Tx"] = df["Dl_geo_Tx"].astype(str).str.strip()
+    df["Sz_geo_Tx"] = df["Sz_geo_Tx"].astype(str).str.strip()
+    df["Dl_geo_Rx"] = df["Dl_geo_Rx"].astype(str).str.strip()
+    df["Sz_geo_Rx"] = df["Sz_geo_Rx"].astype(str).str.strip()
+
+    return df
 # Stałe modelu
 DEFAULT_EIRP_DBM = 55.0
 DEFAULT_EIRP_DBM_EBAND = 51.0
@@ -707,7 +741,10 @@ if not os.path.exists(DEFAULT_DATA_XLSX):
     st.stop()
 
 mtime = DEFAULT_DATA_XLSX.stat().st_mtime
-links_df = load_links_cached(str(DEFAULT_DATA_XLSX), mtime)
+
+links_df = load_links_simple()
+if links_df.empty:
+    st.stop()
 
 if links_df is None or links_df.empty:
     links_df, info_dbg, err_dbg = load_links_with_info(DEFAULT_DATA_XLSX)
